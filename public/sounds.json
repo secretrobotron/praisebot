@@ -5,5 +5,117 @@
       "audio/mp3": "audio/applause.mp3",
       "audio/mp4": "audio/applause.m4a"
     }
+  },
+  "badass": {
+    "name": "badass",
+    "src": {
+      "audio/mp4": "audio/badass.m4a",
+      "audio/mp3": "audio/badass.mp3"
+    }
+  },
+  "bootup": {
+    "name": "bootup",
+    "src": {
+      "audio/mp4": "audio/bootup.m4a",
+      "audio/mp3": "audio/bootup.mp3"
+    }
+  },
+  "coin": {
+    "name": "coin",
+    "src": {
+      "audio/mp4": "audio/coin.m4a",
+      "audio/mp3": "audio/coin.mp3"
+    }
+  },
+  "gameover": {
+    "name": "gameover",
+    "src": {
+      "audio/mp4": "audio/gameover.m4a",
+      "audio/mp3": "audio/gameover.mp3"
+    }
+  },
+  "herewego": {
+    "name": "herewego",
+    "src": {
+      "audio/mp4": "audio/herewego.m4a",
+      "audio/mp3": "audio/herewego.mp3"
+    }
+  },
+  "introjane": {
+    "name": "introjane",
+    "src": {
+      "audio/mp4": "audio/introjane.m4a",
+      "audio/mp3": "audio/introjane.mp3"
+    }
+  },
+  "letsgo": {
+    "name": "letsgo",
+    "src": {
+      "audio/mp4": "audio/letsgo.m4a",
+      "audio/mp3": "audio/letsgo.mp3"
+    }
+  },
+  "loselife": {
+    "name": "loselife",
+    "src": {
+      "audio/mp4": "audio/loselife.m4a",
+      "audio/mp3": "audio/loselife.mp3"
+    }
+  },
+  "nope": {
+    "name": "nope",
+    "src": {
+      "audio/mp4": "audio/nope.m4a",
+      "audio/mp3": "audio/nope.mp3"
+    }
+  },
+  "pokewin": {
+    "name": "pokewin",
+    "src": {
+      "audio/mp4": "audio/pokewin.m4a",
+      "audio/mp3": "audio/pokewin.mp3"
+    }
+  },
+  "priceisright": {
+    "name": "priceisright",
+    "src": {
+      "audio/mp4": "audio/priceisright.m4a",
+      "audio/mp3": "audio/priceisright.mp3"
+    }
+  },
+  "strut": {
+    "name": "strut",
+    "src": {
+      "audio/mp4": "audio/strut.m4a",
+      "audio/mp3": "audio/strut.mp3"
+    }
+  },
+  "superwin": {
+    "name": "superwin",
+    "src": {
+      "audio/mp4": "audio/superwin.m4a",
+      "audio/mp3": "audio/superwin.mp3"
+    }
+  },
+  "timerunningout": {
+    "name": "timerunningout",
+    "src": {
+      "audio/mp4": "audio/timerunningout.m4a",
+      "audio/mp3": "audio/timerunningout.mp3"
+    }
+  },
+  "win": {
+    "name": "win",
+    "src": {
+      "audio/mp4": "audio/win.m4a",
+      "audio/mp3": "audio/win.mp3"
+    }
+  },
+  "wondrous": {
+    "name": "wondrous",
+    "src": {
+      "audio/mp3": "audio/wondrous.m4a",
+      "audio/mp4": "audio/wondrous.mp3"
+    }
   }
 }

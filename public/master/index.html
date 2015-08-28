@@ -39,6 +39,7 @@
 
             columns.name.textContent = sound;
             columns.plays.textContent = sounds[sound].plays;
+            columns.requests.textContent = sounds[sound].requests;
 
             columns.audio.innerHTML = '';
             columns.audio.appendChild(audio);
@@ -72,11 +73,47 @@
         };
 
         soundsXHR.send();
+
+        document.querySelector('#stop-button').onclick = function (e) {
+          Array.prototype.forEach.call(document.querySelectorAll('audio'), function (audio) {
+            audio.pause();
+            audio.currentTime = 0;
+          });
+        };
+
+        document.querySelector('#pause-button').onclick = function (e) {
+          Array.prototype.forEach.call(document.querySelectorAll('audio'), function (audio) {
+            audio.pause();
+          });
+        };
+
+        document.querySelector('#play-button').onclick = function (e) {
+          Array.prototype.forEach.call(document.querySelectorAll('audio'), function (audio) {
+            if (audio.currentTime > 0 && audio.ended === false) audio.play();
+          });
+        };
+
+        document.querySelector('#mute-button').onclick = function (e) {
+          Array.prototype.forEach.call(document.querySelectorAll('audio'), function (audio) {
+            audio.muted = true;
+          });
+        };
+
+        document.querySelector('#unmute-button').onclick = function (e) {
+          Array.prototype.forEach.call(document.querySelectorAll('audio'), function (audio) {
+            audio.muted = false;
+          });
+        };
       });
     </script>
   </head>
   <body>
     <div>
+      <button id="stop-button">STOP</button>
+      <button id="pause-button">PAUSE</button>
+      <button id="play-button">PLAY</button>
+      <button id="mute-button">MUTE</button>
+      <button id="unmute-button">UNMUTE</button>
       <table id="sound-table">
         <tr>
           <td data-function="name">Name</td>
