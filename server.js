@@ -1,9 +1,11 @@
 var WebSocketServer = require('ws').Server;
 var http = require('http');
 var express = require('express');
+var irc = require('irc');
 
 var userPort = process.env.USER_PORT || 5000;
 var masterPort = process.env.MASTER_PORT || 9000;
+var ircNick = 'praisebot';
 
 var userApp = express();
 userApp.use(express.static(__dirname + '/public/user'));
@@ -59,4 +61,34 @@ masterWSS.on('connection', function (ws) {
     masterClientConnection = null;
     console.log('Master left.');
   });
+});
+
+var ircClient = new irc.Client('irc.mozilla.org', ircNick, {
+  channels: ['#webmaker']
+});
+
+function processIRCMessage (channel, requester, message) {
+  var messageMatch = message.match(/^(?:praisebot: )?(\w+)/);
+
+  if (messageMatch && messageMatch[1]) {
+    if (masterClientConnection) {
+      ircClient.say(channel, requester + ': ok! ' + messageMatch[1] + 'ing');
+      masterClientConnection.send(JSON.stringify({play: messageMatch[1]}));
+    }
+    else {
+      ircClient.say(channel, requester + ': Sorry, nobody is around to do that :/.');
+    }
+  }
+}
+
+ircClient.addListener('message', function (from, to, message) {
+  console.log('IRC: ' + from + ' => ' + to + ': ' + message);
+  if (message.indexOf(ircNick + ': ') === 0) {
+    processIRCMessage(to, from, message);
+  }
+});
+
+ircClient.addListener('pm', function (from, message) {
+  console.log('IRC: ' + from + ' => ME: ' + message);
+  processIRCMessage(from, from, message);
 });
