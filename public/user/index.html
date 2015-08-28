@@ -3,33 +3,36 @@
   <head>
     <script>
       document.addEventListener('DOMContentLoaded', function () {
-        var host = location.origin.replace(/^http/, 'ws');
-        var ws = new WebSocket(host);
+        var soundsXHR = new XMLHttpRequest();
+        soundsXHR.open('GET', 'sounds.json', true);
+        soundsXHR.onload = function () {
+          var sounds = JSON.parse(soundsXHR.response);
+          var buttonContainer = document.querySelector('#button-container');
 
-        ws.addEventListener('open', function (e) {
-          var soundsXHR = new XMLHttpRequest();
-          soundsXHR.open('GET', 'sounds.json', true);
-          soundsXHR.onload = function () {
-            var sounds = JSON.parse(soundsXHR.response);
-            var buttonContainer = document.querySelector('#button-container');
+          Object.keys(sounds).forEach(function (sound) {
+            var button = document.createElement('button');
+            button.className = '.sound-button';
 
-            Object.keys(sounds).forEach(function (sound) {
-              var button = document.createElement('button');
-              button.className = '.sound-button';
+            button.setAttribute('data-sound', sound);
+            button.textContent = sounds[sound].name;
 
-              button.setAttribute('data-sound', sound);
-              button.textContent = sounds[sound].name;
+            button.onclick = function (e) {
+              var messageXHR = new XMLHttpRequest();
+              messageXHR.open('POST', '/play', true);
 
-              button.onclick = function (e) {
-                ws.send(JSON.stringify({'play': sound}));
+              messageXHR.onload = function (e) {
+                console.log(messageXHR.response);
               };
 
-              buttonContainer.appendChild(button);
-            });
-          };
+              messageXHR.setRequestHeader("Content-type", "application/json");
+              messageXHR.send(JSON.stringify({'play': sound}));
+            };
 
-          soundsXHR.send();
-        });
+            buttonContainer.appendChild(button);
+          });
+        };
+
+        soundsXHR.send();
       });
     </script>
   </head>

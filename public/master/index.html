@@ -6,7 +6,7 @@
     <script>
       document.addEventListener('DOMContentLoaded', function () {
         var soundsXHR = new XMLHttpRequest();
-        soundsXHR.open('GET', 'sounds.json', true);
+        soundsXHR.open('GET', '/sounds.json', true);
         soundsXHR.onload = function () {
           var sounds = JSON.parse(soundsXHR.response);
 

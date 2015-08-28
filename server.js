@@ -1,62 +1,73 @@
-var WebSocketServer = require('ws').Server;
+var ws = require('ws').Server;
 var http = require('http');
 var express = require('express');
+var bodyParser = require('body-parser');
+var basicAuth = require('basic-auth');
 var irc = require('irc');
 var sounds = require('./public/sounds.json');
 
-var userPort = process.env.USER_PORT || 5000;
-var masterPort = process.env.MASTER_PORT || 9000;
+var port = process.env.PORT || 5000;
 var ircNick = 'praisebot';
 
-var userApp = express();
-userApp.use(express.static(__dirname + '/public/user'));
-userApp.use('/sounds.json', express.static(__dirname + '/public/sounds.json'));
-var userServer = http.createServer(userApp);
-userServer.listen(userPort);
+var app = express();
+var server = http.createServer(app);
 
-var masterApp = express();
-masterApp.use(express.static(__dirname + '/public/master'));
-masterApp.use('/sounds.json', express.static(__dirname + '/public/sounds.json'));
-var masterServer = http.createServer(masterApp);
-masterServer.listen(masterPort);
+function auth (req, res, next) {
+  function unauthorized(res) {
+    res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+    return res.sendStatus(401);
+  };
 
-console.log('Client HTTP server listening on %d', userPort);
-console.log('Master HTTP server listening on %d', masterPort);
+  var user = basicAuth(req);
+  if (!user || !user.name || !user.pass) {
+    return unauthorized(res);
+  };
 
-var userWSS = new WebSocketServer({server: userServer});
-var masterWSS = new WebSocketServer({server: masterServer});
+  if (user.name === process.env.MASTER_USERNAME && process.env.MASTER_PASSWORD) {
+    return next();
+  } else {
+    return unauthorized(res);
+  };
+};
+
+app.use(bodyParser.json());
+
+app.use('/', express.static(__dirname + '/public/user'));
+app.use('/sounds.json', express.static(__dirname + '/public/sounds.json'));
+app.use('/master', auth, express.static(__dirname + '/public/master'));
+
+server.listen(port);
+
+console.log('HTTP server listening on %d', port);
+
+var websocketServer = new ws({server: server});
 
 var masterClientConnection = null;
-var numUsers = 0;
 
-userWSS.on('connection', function (ws) {
-  ++numUsers;
-
-  console.log('User joined (%d).', numUsers);
-
-  ws.on('message', function (data) {
-    data = JSON.parse(data);
-    if (data.play) {
-      console.log('Received play command: ' + data.play);
-      if (masterClientConnection) {
-        masterClientConnection.send(JSON.stringify(data));
-      }
+app.post('/play', function (req, res) {
+  if (masterClientConnection) {
+    if (req.body.play && sounds[req.body.play]) {
+      masterClientConnection.send(JSON.stringify({play: req.body.play}));
+      res.status(200).json({status: 'ok'});
     }
-  });
-
-  ws.on('close', function() {
-    console.log('User left (%d).', numUsers);
-  });
+    else {
+      res.status(200).json({status: 'invalid'});
+    }
+  }
+  else {
+    res.status(200).json({status: 'no master'});
+  }
 });
 
-masterWSS.on('connection', function (ws) {
+websocketServer.on('connection', function (ws) {
   console.log('Master joined.');
 
-  masterClientConnection = ws;
-
-  ws.on('message', function (data) {
-
-  });
+  if (!masterClientConnection) {
+    masterClientConnection = ws;
+  }
+  else {
+    console.warn('Another master tried to join.');
+  }
 
   ws.on('close', function() {
     masterClientConnection = null;
@@ -64,37 +75,37 @@ masterWSS.on('connection', function (ws) {
   });
 });
 
-var ircClient = new irc.Client('irc.mozilla.org', ircNick, {
-  channels: ['#webmaker']
-});
+// var ircClient = new irc.Client('irc.mozilla.org', ircNick, {
+//   channels: ['#webmaker']
+// });
 
-function processIRCMessage (channel, requester, message) {
-  var messageMatch = message.match(/^(?:praisebot: )?(\w+)/);
+// function processIRCMessage (channel, requester, message) {
+//   var messageMatch = message.match(/^(?:praisebot: )?(\w+)/);
 
-  if (messageMatch && messageMatch[1]) {
-    if (masterClientConnection) {
-      if (sounds[messageMatch[1]]) {
-        ircClient.say(channel, requester + ': ok! ' + messageMatch[1] + 'ing');
-        masterClientConnection.send(JSON.stringify({play: messageMatch[1]}));
-      }
-      else {
-        ircClient.say(channel, requester + ': Sorry, that\'s not a thing I know how to do.');
-      }
-    }
-    else {
-      ircClient.say(channel, requester + ': Sorry, nobody is around to do that :/.');
-    }
-  }
-}
+//   if (messageMatch && messageMatch[1]) {
+//     if (masterClientConnection) {
+//       if (sounds[messageMatch[1]]) {
+//         ircClient.say(channel, requester + ': ok! ' + messageMatch[1] + 'ing');
+//         masterClientConnection.send(JSON.stringify({play: messageMatch[1]}));
+//       }
+//       else {
+//         ircClient.say(channel, requester + ': Sorry, that\'s not a thing I know how to do.');
+//       }
+//     }
+//     else {
+//       ircClient.say(channel, requester + ': Sorry, nobody is around to do that :/.');
+//     }
+//   }
+// }
 
-ircClient.addListener('message', function (from, to, message) {
-  console.log('IRC: ' + from + ' => ' + to + ': ' + message);
-  if (message.indexOf(ircNick + ': ') === 0) {
-    processIRCMessage(to, from, message);
-  }
-});
+// ircClient.addListener('message', function (from, to, message) {
+//   console.log('IRC: ' + from + ' => ' + to + ': ' + message);
+//   if (message.indexOf(ircNick + ': ') === 0) {
+//     processIRCMessage(to, from, message);
+//   }
+// });
 
-ircClient.addListener('pm', function (from, message) {
-  console.log('IRC: ' + from + ' => ME: ' + message);
-  processIRCMessage(from, from, message);
-});
+// ircClient.addListener('pm', function (from, message) {
+//   console.log('IRC: ' + from + ' => ME: ' + message);
+//   processIRCMessage(from, from, message);
+// });
