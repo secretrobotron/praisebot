@@ -2,6 +2,7 @@ var WebSocketServer = require('ws').Server;
 var http = require('http');
 var express = require('express');
 var irc = require('irc');
+var sounds = require('./public/sounds.json');
 
 var userPort = process.env.USER_PORT || 5000;
 var masterPort = process.env.MASTER_PORT || 9000;
@@ -72,8 +73,13 @@ function processIRCMessage (channel, requester, message) {
 
   if (messageMatch && messageMatch[1]) {
     if (masterClientConnection) {
-      ircClient.say(channel, requester + ': ok! ' + messageMatch[1] + 'ing');
-      masterClientConnection.send(JSON.stringify({play: messageMatch[1]}));
+      if (sounds[messageMatch[1]]) {
+        ircClient.say(channel, requester + ': ok! ' + messageMatch[1] + 'ing');
+        masterClientConnection.send(JSON.stringify({play: messageMatch[1]}));
+      }
+      else {
+        ircClient.say(channel, requester + ': Sorry, that\'s not a thing I know how to do.');
+      }
     }
     else {
       ircClient.say(channel, requester + ': Sorry, nobody is around to do that :/.');
