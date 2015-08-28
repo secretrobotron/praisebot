@@ -7,112 +7,112 @@
     }
   },
   "badass": {
-    "name": "badass",
+    "name": "Badass",
     "src": {
       "audio/mp4": "audio/badass.m4a",
       "audio/mp3": "audio/badass.mp3"
     }
   },
   "bootup": {
-    "name": "bootup",
+    "name": "Boot up",
     "src": {
       "audio/mp4": "audio/bootup.m4a",
       "audio/mp3": "audio/bootup.mp3"
     }
   },
   "coin": {
-    "name": "coin",
+    "name": "Coin",
     "src": {
       "audio/mp4": "audio/coin.m4a",
       "audio/mp3": "audio/coin.mp3"
     }
   },
   "gameover": {
-    "name": "gameover",
+    "name": "Game Over",
     "src": {
       "audio/mp4": "audio/gameover.m4a",
       "audio/mp3": "audio/gameover.mp3"
     }
   },
   "herewego": {
-    "name": "herewego",
+    "name": "Here we go!",
     "src": {
       "audio/mp4": "audio/herewego.m4a",
       "audio/mp3": "audio/herewego.mp3"
     }
   },
   "introjane": {
-    "name": "introjane",
+    "name": "Jane Intro",
     "src": {
       "audio/mp4": "audio/introjane.m4a",
       "audio/mp3": "audio/introjane.mp3"
     }
   },
   "letsgo": {
-    "name": "letsgo",
+    "name": "Let's-a go!",
     "src": {
       "audio/mp4": "audio/letsgo.m4a",
       "audio/mp3": "audio/letsgo.mp3"
     }
   },
   "loselife": {
-    "name": "loselife",
+    "name": "Lose a life",
     "src": {
       "audio/mp4": "audio/loselife.m4a",
       "audio/mp3": "audio/loselife.mp3"
     }
   },
   "nope": {
-    "name": "nope",
+    "name": "NOPE",
     "src": {
       "audio/mp4": "audio/nope.m4a",
       "audio/mp3": "audio/nope.mp3"
     }
   },
   "pokewin": {
-    "name": "pokewin",
+    "name": "Pokemon Win",
     "src": {
       "audio/mp4": "audio/pokewin.m4a",
       "audio/mp3": "audio/pokewin.mp3"
     }
   },
   "priceisright": {
-    "name": "priceisright",
+    "name": "Price is wrong",
     "src": {
       "audio/mp4": "audio/priceisright.m4a",
       "audio/mp3": "audio/priceisright.mp3"
     }
   },
   "strut": {
-    "name": "strut",
+    "name": "Strut",
     "src": {
       "audio/mp4": "audio/strut.m4a",
       "audio/mp3": "audio/strut.mp3"
     }
   },
   "superwin": {
-    "name": "superwin",
+    "name": "Winner!!",
     "src": {
       "audio/mp4": "audio/superwin.m4a",
       "audio/mp3": "audio/superwin.mp3"
     }
   },
   "timerunningout": {
-    "name": "timerunningout",
+    "name": "Running out of time...",
     "src": {
       "audio/mp4": "audio/timerunningout.m4a",
       "audio/mp3": "audio/timerunningout.mp3"
     }
   },
   "win": {
-    "name": "win",
+    "name": "woo!",
     "src": {
       "audio/mp4": "audio/win.m4a",
       "audio/mp3": "audio/win.mp3"
     }
   },
   "wondrous": {
-    "name": "wondrous",
+    "name": "ʕ ´ᴥ`ʔ",
     "src": {
       "audio/mp3": "audio/wondrous.m4a",
       "audio/mp4": "audio/wondrous.mp3"
