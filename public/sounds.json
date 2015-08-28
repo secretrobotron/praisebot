@@ -1,0 +1,9 @@
+{
+  "applause": {
+    "name": "Applause",
+    "src": {
+      "audio/mp3": "audio/applause.mp3",
+      "audio/mp4": "audio/applause.m4a"
+    }
+  }
+}

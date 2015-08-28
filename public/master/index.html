@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="//code.cdn.mozilla.net/fonts/fira.css">
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        var soundsXHR = new XMLHttpRequest();
+        soundsXHR.open('GET', 'sounds.json', true);
+        soundsXHR.onload = function () {
+          var sounds = JSON.parse(soundsXHR.response);
+
+          var soundTable = document.querySelector('#sound-table');
+          var headerRow = soundTable.querySelector('tr');
+
+          Object.keys(sounds).forEach(function (sound) {
+            var row = headerRow.cloneNode(true);
+            row.setAttribute('data-sound', sound);
+            soundTable.appendChild(row);
+
+            var columns = {};
+            ['name', 'requests', 'plays', 'audio'].forEach(function (columName) {
+              columns[columName] = row.querySelector('[data-function="' + columName + '"]');
+            });
+
+            sounds[sound].requests = 0;
+            sounds[sound].plays = 0;
+
+            var audio = document.createElement('audio');
+            Object.keys(sounds[sound].src).forEach(function (mimeType) {
+              var source = document.createElement('source');
+              source.src = sounds[sound].src[mimeType];
+              source.type = mimeType;
+              audio.appendChild(source);
+            });
+
+            audio.controls = true;
+            audio.preload = 'auto';
+
+            columns.name.textContent = sound;
+            columns.plays.textContent = sounds[sound].plays;
+
+            columns.audio.innerHTML = '';
+            columns.audio.appendChild(audio);
+
+            sounds[sound].play = function () {
+              ++sounds[sound].requests;
+              columns.requests.textContent = sounds[sound].requests;
+              audio.play();
+            };
+
+            audio.onplay = function () {
+              ++sounds[sound].plays;
+              columns.plays.textContent = sounds[sound].plays;
+            };
+          });
+
+          var host = location.origin.replace(/^http/, 'ws');
+          var ws = new WebSocket(host);
+
+          ws.addEventListener('open', function (e) {
+          });
+
+          ws.addEventListener('message', function (e) {
+            var data = JSON.parse(e.data);
+            if (data.play) {
+              if (sounds[data.play]) {
+                sounds[data.play].play();
+              }
+            }
+          });
+        };
+
+        soundsXHR.send();
+      });
+    </script>
+  </head>
+  <body>
+    <div>
+      <table id="sound-table">
+        <tr>
+          <td data-function="name">Name</td>
+          <td data-function="requests">Requests</td>
+          <td data-function="plays">Plays</td>
+          <td data-function="audio">Audio</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>
