@@ -75,37 +75,37 @@ websocketServer.on('connection', function (ws) {
   });
 });
 
-// var ircClient = new irc.Client('irc.mozilla.org', ircNick, {
-//   channels: ['#webmaker']
-// });
+var ircClient = new irc.Client('irc.mozilla.org', ircNick, {
+  channels: ['#webmaker']
+});
 
-// function processIRCMessage (channel, requester, message) {
-//   var messageMatch = message.match(/^(?:praisebot: )?(\w+)/);
+function processIRCMessage (channel, requester, message) {
+  var messageMatch = message.match(/^(?:praisebot: )?(\w+)/);
 
-//   if (messageMatch && messageMatch[1]) {
-//     if (masterClientConnection) {
-//       if (sounds[messageMatch[1]]) {
-//         ircClient.say(channel, requester + ': ok! ' + messageMatch[1] + 'ing');
-//         masterClientConnection.send(JSON.stringify({play: messageMatch[1]}));
-//       }
-//       else {
-//         ircClient.say(channel, requester + ': Sorry, that\'s not a thing I know how to do.');
-//       }
-//     }
-//     else {
-//       ircClient.say(channel, requester + ': Sorry, nobody is around to do that :/.');
-//     }
-//   }
-// }
+  if (messageMatch && messageMatch[1]) {
+    if (masterClientConnection) {
+      if (sounds[messageMatch[1]]) {
+        ircClient.say(channel, requester + ': ok! ' + messageMatch[1] + 'ing');
+        masterClientConnection.send(JSON.stringify({play: messageMatch[1]}));
+      }
+      else {
+        ircClient.say(channel, requester + ': Sorry, that\'s not a thing I know how to do.');
+      }
+    }
+    else {
+      ircClient.say(channel, requester + ': Sorry, nobody is around to do that :/.');
+    }
+  }
+}
 
-// ircClient.addListener('message', function (from, to, message) {
-//   console.log('IRC: ' + from + ' => ' + to + ': ' + message);
-//   if (message.indexOf(ircNick + ': ') === 0) {
-//     processIRCMessage(to, from, message);
-//   }
-// });
+ircClient.addListener('message', function (from, to, message) {
+  console.log('IRC: ' + from + ' => ' + to + ': ' + message);
+  if (message.indexOf(ircNick + ': ') === 0) {
+    processIRCMessage(to, from, message);
+  }
+});
 
-// ircClient.addListener('pm', function (from, message) {
-//   console.log('IRC: ' + from + ' => ME: ' + message);
-//   processIRCMessage(from, from, message);
-// });
+ircClient.addListener('pm', function (from, message) {
+  console.log('IRC: ' + from + ' => ME: ' + message);
+  processIRCMessage(from, from, message);
+});
